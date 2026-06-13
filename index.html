@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+
+    <div class="project-container">
+        <canvas></canvas>
+
+        <navbar>
+            <div class="operations-container">
+                <div>
+                    <button id="eraser">
+                        <i class="fa-solid fa-eraser"></i>
+                    </button>
+                    Erase
+                </div>
+                <div>
+                    <button id="draw">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+                    Draw
+                </div>
+
+                <div>
+                    <button id="line">
+                        <i class="fa-solid fa-slash"></i>
+                    </button>
+                    Line
+                </div>
+                <div>
+                    <button id="circle">
+                        <i class="fa-regular fa-circle"></i>
+                    </button>
+                    Oval
+                </div>
+                <div>
+                    <button id="rectangle">
+                        <i class="fa-regular fa-square"></i>
+                    </button>
+                    Rectangle
+                </div>
+            </div>
+            <div id="colordiv">
+                <div id="white-color" class="color-button"></div>
+                <div id="black-color" class="color-button"></div>
+                <div id="red-color" class="color-button"></div>
+                <div id="orange-color" class="color-button"></div>
+                <div id="yellow-color" class="color-button"></div>
+                <div id="green-color" class="color-button"></div>
+                <div id="blue-color" class="color-button"></div>
+                <div id="purple-color" class="color-button"></div>
+                <div id="any-color" class="color-button"><input id="color-picker" type="color"></input></div>
+            </div>
+
+            <div id="size-name"></div>
+            <button id="minus">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+            <input type="range" id="size" min="1" max="100" value="15">
+            <div id="size-no">15px</div>
+            <button id="plus">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+
+            <div class="undo-redo-container">
+                <div>
+                    <button id="undo" title="Ctrl + Z">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    Undo
+                </div>
+                <div>
+                    <button id="redo" title="Ctrl + Y">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    Redo
+                </div>
+            </div>
+            
+            
+           
+            <div>
+                <button id="save">
+                    <i class="fa-regular fa-floppy-disk"></i>
+                </button>
+                Save
+            </div>
+            <div>
+                <button id="open">
+                    <i class="fa-regular fa-folder-open"></i>
+                </button>
+                Open
+            </div>
+            <div>
+                <button id="clear">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+                Clear
+            </div>
+        </navbar>
+
+        <img id="openingimg">
+
+
+        <dialog class="save-dialog">
+            <div class="file-name-container">
+                <h2>File Name</h2>
+                <div class="inputOfDialog">
+                    <div id="label-div">
+                        <label for="name" id="label-nameOfFile">Save As: </label>
+                    </div>
+                    <input type="text" placeholder="Drawing" id="nameOfFile">
+                </div>
+                <div class="buttonsOfDialog">
+                    <button id="confirm">Confirm</button>
+                    <button id="cancel">Cancel</button>
+                </div>
+            </div>
+        </dialog>
+    </div>
+
+
+    <script src="drawing.js"></script>
+
+    <!-- <button id="fullscreen">Full Screen</button> -->
+
+    <!-- <button id="ond">On Drawing</button>
+    <button id="stop">Stop Drawing</button> -->
+
+    <!-- <script src="collision.js"></script>
+    <script src="script.js"></script>
+    <script src="gravity.js"></script> -->
+
+</body>
+
+</html>
