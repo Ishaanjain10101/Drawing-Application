@@ -324,7 +324,12 @@ function saveModalShow(){
             modal.close();
             reject();
         });
-        
+        document.addEventListener("keydown",(e)=>{
+            if(e.key === "Escape"){
+                modal.close();
+                reject();
+            }
+        })
     })
 }
 
@@ -366,6 +371,7 @@ function savingMechanism(){
         })
         .catch(()=>{
             freeDraw();
+            draw.classList.add("isSelectedOption");
         })
 }
 
@@ -688,7 +694,7 @@ open.addEventListener("click",async ()=>{
         })
     }
     catch{
-        
+        console.error("File Not Opening");
     }
     
 })
@@ -776,8 +782,9 @@ anyColor.addEventListener("input",()=>{
 })
 
 anyColorDiv.addEventListener("click",()=>{
+    removeOtherColor("any");
+    penColor = anyColor.value;
     anyColorDiv.classList.add("isSelected");
-
 })
 
 
