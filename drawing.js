@@ -511,33 +511,110 @@ circle.addEventListener("click",()=>{
     drawOval();
 })
 
-
 //Rectangle shape class
 class Rect{
     constructor(x,y,color){
         this.x = x;
         this.y = y;
         this.color = color;
-        
+        this.finalX = undefined;
+        this.finalY = undefined;
+        this.cornerCoords = {
+            "c1":{},
+            "c2":{},
+            "c3":{},
+            "c4":{}
+        };
+        this.struc = "";
+        this.width=undefined;
+        this.height=undefined;
     }
     update(newX,newY){
         ctx.clearRect(0,0,innerWidth,innerHeight);
         ctx.drawImage(tCanvas.canvas,0,0);
         ctx.beginPath();
         ctx.lineWidth=lineWidth;
-        let width = Math.abs(this.x-newX);
-        let height = Math.abs(this.y - newY);
+        this.width = Math.abs(this.x-newX);
+        this.height = Math.abs(this.y - newY);
         if(this.x < newX && this.y < newY){
-            ctx.rect(this.x,this.y,width,height);
+            ctx.rect(this.x,this.y,this.width,this.height);
+            this.struc = "AXBX";
+            this.cornerCoords.c1 = {
+                x:this.x,
+                y:this.y
+            }
+            this.cornerCoords.c2 = {
+                x:newX,
+                y:this.y
+            }
+            this.cornerCoords.c3 = {
+                x:newX,
+                y:newY
+            }
+            this.cornerCoords.c4 = {
+                x:this.x,
+                y:newY
+            }
         }
         else if(this.x < newX && this.y > newY){
-            ctx.rect(this.x,newY,width,height);
+            ctx.rect(this.x,newY,this.width,this.height);
+            this.struc = "XBXA";
+            this.cornerCoords.c1 = {
+                x:this.x,
+                y:newY
+            }            
+            this.cornerCoords.c2 = {
+                x:newX,
+                y:newY
+            }
+            this.cornerCoords.c3 = {
+                x:newX,
+                y:this.y
+            }
+            this.cornerCoords.c4 = {
+                x:this.x,
+                y:this.y
+            }
         }
         else if(this.x > newX && this.y < newY){
-            ctx.rect(newX,this.y,width,height);
+            ctx.rect(newX,this.y,this.width,this.height);
+            this.struc = "XAXB";
+            this.cornerCoords.c1 = {
+                x:newX,
+                y:this.y
+            }
+            this.cornerCoords.c2 = {
+                x:this.x,
+                y:this.y
+            }
+            this.cornerCoords.c3 = {
+                x:this.x,
+                y:newY
+            }            
+            this.cornerCoords.c4 = {
+                x:newX,
+                y:newY
+            }            
         }
         else if(this.x > newX && this.y > newY){
-            ctx.rect(newX,newY,width,height);
+            ctx.rect(newX,newY,this.width,this.height);
+            this.struc = "BXAX";
+            this.cornerCoords.c1 = {
+                x:newX,
+                y:newY
+            }
+            this.cornerCoords.c2 = {
+                x:this.x,
+                y:newY
+            }
+            this.cornerCoords.c3 = {
+                x:this.x,
+                y:this.y
+            }
+            this.cornerCoords.c4 = {
+                x:newX,
+                y:this.y
+            }
         }
         ctx.stroke();
         ctx.closePath();
@@ -545,11 +622,31 @@ class Rect{
 
 }
 
+let rectangles = [];
 let rectangleInst;
 let rectangleClicked = false;
 
+let rectInst;
+function resizeRectMove(e){
+    if(rectangleClicked){
+        rectInst.update(e.clientX,e.clientY);
+    }
+}
+function resizeRectUp(e){
+    if(rectangleClicked && (e.clientY > 140)){
+        rectInst.finalX = e.clientX;
+        rectInst.finalY = e.clientY;
+        rectangles.push(rectInst);
+        tCanvas = new TempCanvas();
+        stackCanvas.push(tCanvas);
+        rectangleClicked = false;
+    }   
+}
+
 function freeMouseDownRectangle(e){
-    if(e.clientY>140){
+    if(e.clientY>140 && !(handleCornersCursor(e))){
+        window.removeEventListener("mousemove",resizeRectMove);
+        window.removeEventListener("mouseup",resizeRectUp);
         rectangleInst = new Rect(e.clientX,e.clientY,penColor);
         ctx.strokeStyle=penColor;
         rectangleClicked = true;
@@ -564,11 +661,103 @@ function freeMouseDragRectangle(e){
 
 function freeMouseUpRectangle(e){
     if(e.clientY > 140){
+        rectangleInst.finalX = e.clientX;
+        rectangleInst.finalY = e.clientY;
+        rectangles.push(rectangleInst);
         tCanvas = new TempCanvas();
-        
         stackCanvas.push(tCanvas);
         rectangleClicked = false;
     }
+}
+
+
+function handleCorners(event){
+    if (rectangles.length === 0) {
+        return false;
+    };
+    let index= rectangles.length-1;
+    rectInst = rectangles[index];
+
+    const cords = {
+        x: event.clientX,
+        y: event.clientY
+    };
+    const corners = {
+        c1 : rectInst.cornerCoords.c1,
+        c2 : rectInst.cornerCoords.c2,
+        c3 : rectInst.cornerCoords.c3,
+        c4 : rectInst.cornerCoords.c4
+    }
+    
+    for (const [num,coords] of Object.entries(corners)){
+        if(Math.abs(cords.x - coords.x) <= lineWidth/2 && Math.abs(cords.y- coords.y) <= lineWidth/2){
+            ctx.drawImage(stackCanvas[stackCanvas.length-1].canvas,0,0);
+            if(num==="c1"){
+                rectInst.x =corners.c3.x;
+                rectInst.y = corners.c3.y;
+            }
+            else if(num === "c2"){
+                rectInst.x =corners.c4.x;
+                rectInst.y = corners.c4.y;
+            }
+            else if(num === "c3"){
+                rectInst.x =corners.c1.x;
+                rectInst.y = corners.c1.y;
+            }
+            else{
+                rectInst.x =corners.c2.x;
+                rectInst.y = corners.c2.y;
+            }
+            
+            ctx.strokeStyle=rectInst.color;
+            tCanvas = stackCanvas[stackCanvas.length-2];
+            stackCanvas.pop();
+
+            rectangleClicked = true;
+            window.addEventListener("mousemove",resizeRectMove);
+            window.addEventListener("mouseup",resizeRectUp);
+        }
+    }
+        
+}
+
+function handleCornersCursor(event){
+    if (rectangles.length === 0) {
+        return false
+    };
+    let isHoveringOverCorner = false;
+    let rectInst = rectangles[rectangles.length-1];
+    const cords = {
+        x: event.clientX,
+        y: event.clientY
+    };
+    const corners = {
+        c1 : rectInst.cornerCoords.c1,
+        c2 : rectInst.cornerCoords.c2,
+        c3 : rectInst.cornerCoords.c3,
+        c4 : rectInst.cornerCoords.c4
+    }
+    
+    for (const [num,coords] of Object.entries(corners)){
+        if(Math.abs(cords.x - coords.x) <= lineWidth/2 && Math.abs(cords.y- coords.y) <= lineWidth/2){
+            isHoveringOverCorner = true;
+            switch (num){
+                case "c1":
+                case "c3":
+                    canvas.style.cursor = "nw-resize";
+                    break;
+                case "c2":
+                case "c4":
+                    canvas.style.cursor = "ne-resize";
+                    break;
+            }
+        }
+    }
+    
+    if(!isHoveringOverCorner){
+       canvas.style.cursor = "default";
+    }
+    return isHoveringOverCorner;
 }
 
 function drawRectangle(){    
@@ -577,6 +766,11 @@ function drawRectangle(){
     window.addEventListener("mousemove",freeMouseDragRectangle);
 
     window.addEventListener("mouseup",freeMouseUpRectangle);
+
+    window.addEventListener("mousedown",handleCorners);
+
+    window.addEventListener("mousemove",handleCornersCursor);
+
 }
 
 function removeDrawRectangle(){
@@ -593,6 +787,7 @@ rectangle.addEventListener("click",()=>{
     removeOtherOptions("rectangle");
     drawRectangle();
 })
+
 
 //line class
 class Line{
