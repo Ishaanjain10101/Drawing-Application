@@ -885,6 +885,8 @@ open.addEventListener("click",async ()=>{
         img.src = temp;
         img.addEventListener("load",()=>{
             ctx.drawImage(img, 0,140,innerWidth,innerHeight-140);
+            tCanvas= new TempCanvas();
+            stackCanvas.push(tCanvas);
             URL.revokeObjectURL(file);
         })
     }
@@ -904,8 +906,13 @@ clear.addEventListener("click",()=>{
     tCanvas = new TempCanvas();
     stackCanvas.push(tCanvas);
 })
-
-
+//Shortcut for opening files
+window.addEventListener("keydown",(e)=>{
+    if(e.ctrlKey && e.key.toLowerCase()=== "o"){
+        e.preventDefault();
+        open.click();
+    }
+})
 
 //Changing Colors
 blackColor.classList.add("isSelected");
