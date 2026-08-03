@@ -534,6 +534,7 @@ class Rect{
         ctx.drawImage(tCanvas.canvas,0,0);
         ctx.beginPath();
         ctx.lineWidth=lineWidth;
+        this.lineWidth = ctx.lineWidth;
         this.width = Math.abs(this.x-newX);
         this.height = Math.abs(this.y - newY);
         if(this.x < newX && this.y < newY){
@@ -690,7 +691,7 @@ function handleCorners(event){
     }
     
     for (const [num,coords] of Object.entries(corners)){
-        if(Math.abs(cords.x - coords.x) <= lineWidth/2 && Math.abs(cords.y- coords.y) <= lineWidth/2){
+        if(Math.abs(cords.x - coords.x) <= rectInst.lineWidth/2 && Math.abs(cords.y- coords.y) <= rectInst.lineWidth/2){
             ctx.drawImage(stackCanvas[stackCanvas.length-1].canvas,0,0);
             if(num==="c1"){
                 rectInst.x =corners.c3.x;
@@ -739,7 +740,7 @@ function handleCornersCursor(event){
     }
     
     for (const [num,coords] of Object.entries(corners)){
-        if(Math.abs(cords.x - coords.x) <= lineWidth/2 && Math.abs(cords.y- coords.y) <= lineWidth/2){
+        if(Math.abs(cords.x - coords.x) <= rectInst.lineWidth/2 && Math.abs(cords.y- coords.y) <= rectInst.lineWidth/2){
             isHoveringOverCorner = true;
             switch (num){
                 case "c1":
