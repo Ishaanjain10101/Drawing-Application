@@ -529,12 +529,12 @@ class Rect{
         this.width=undefined;
         this.height=undefined;
     }
-    update(newX,newY){
+    update(newX,newY , lineWidthG){
         ctx.clearRect(0,0,innerWidth,innerHeight);
         ctx.drawImage(tCanvas.canvas,0,0);
         ctx.beginPath();
-        ctx.lineWidth=lineWidth;
-        this.lineWidth = ctx.lineWidth;
+        ctx.lineWidth=lineWidthG;
+        this.lineWidth = lineWidthG;
         this.width = Math.abs(this.x-newX);
         this.height = Math.abs(this.y - newY);
         if(this.x < newX && this.y < newY){
@@ -630,7 +630,7 @@ let rectangleClicked = false;
 let rectInst;
 function resizeRectMove(e){
     if(rectangleClicked){
-        rectInst.update(e.clientX,e.clientY);
+        rectInst.update(e.clientX,e.clientY,rectInst.lineWidth);
     }
 }
 function resizeRectUp(e){
@@ -656,7 +656,7 @@ function freeMouseDownRectangle(e){
 
 function freeMouseDragRectangle(e){
     if(rectangleClicked){
-        rectangleInst.update(e.clientX,e.clientY);
+        rectangleInst.update(e.clientX,e.clientY,lineWidth);
     }
 }
 
