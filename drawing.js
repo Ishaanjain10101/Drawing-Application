@@ -519,6 +519,7 @@ class Rect{
         this.color = color;
         this.finalX = undefined;
         this.finalY = undefined;
+        this.lineWidth = lineWidth;
         this.cornerCoords = {
             "c1":{},
             "c2":{},
@@ -630,7 +631,8 @@ let rectangleClicked = false;
 let rectInst;
 function resizeRectMove(e){
     if(rectangleClicked){
-        rectInst.update(e.clientX,e.clientY,rectInst.lineWidth);
+        const l = rectInst.lineWidth;
+        rectInst.update(e.clientX,e.clientY,l);
     }
 }
 function resizeRectUp(e){
